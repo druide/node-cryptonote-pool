@@ -30,6 +30,9 @@ if (cluster.isWorker){
         case 'cli':
             require('./lib/cli.js');
             break
+        case 'proxy':
+            require('./lib/proxy.js');
+            break;
     }
     return;
 }
@@ -40,7 +43,7 @@ require('./lib/exceptionWriter.js')(logSystem);
 
 var singleModule = (function(){
 
-    var validModules = ['pool', 'api', 'unlocker', 'payments'];
+    var validModules = ['pool', 'api', 'unlocker', 'payments', 'proxy'];
 
     for (var i = 0; i < process.argv.length; i++){
         if (process.argv[i].indexOf('-module=') === 0){
@@ -75,6 +78,9 @@ var singleModule = (function(){
                 case 'api':
                     spawnApi();
                     break;
+                case 'proxy':
+                    spawnProxy();
+                    break;
             }
         }
         else{
@@ -82,6 +88,7 @@ var singleModule = (function(){
             spawnBlockUnlocker();
             spawnPaymentProcessor();
             spawnApi();
+            spawnProxy();
         }
 
         spawnCli();
@@ -222,6 +229,20 @@ function spawnApi(){
         log('error', logSystem, 'API died, spawning replacement...');
         setTimeout(function(){
             spawnApi();
+        }, 2000);
+    });
+}
+
+function spawnProxy(){
+    if (!config.proxy || !config.proxy.enabled) return;
+
+    var worker = cluster.fork({
+        workerType: 'proxy'
+    });
+    worker.on('exit', function(code, signal){
+        log('error', logSystem, 'Proxy died, spawning replacement...');
+        setTimeout(function(){
+            spawnProxy();
         }, 2000);
     });
 }

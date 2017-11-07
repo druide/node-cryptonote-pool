@@ -101,6 +101,16 @@
         "password": "your_password"
     },
 
+    "proxy": {
+        "enabled": true,
+        "pool": {
+            "host": "localhost",
+            "port": 3333,
+            "log": false
+        },
+        "port": 8892
+    },
+
     "daemon": {
         "host": "127.0.0.1",
         "port": 18081

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://coin-hive.com/lib/coinhive.min.js"></script>
+</head>
+<body>
+<script>
+  /* global CoinHive */
+  CoinHive.CONFIG.WEBSOCKET_SHARDS = [['ws://localhost:8892']]
+  var miner = new CoinHive.Anonymous('48Y4SoUJM5L3YXBEfNQ8bFNsvTNsqcH5Rgq8RF7BwpgvTBj2xr7CmWVanaw7L4U9MnZ4AG7U6Pn1pBhfQhFyFZ1rL1efL8z', {
+    pool: {
+      host: '127.0.0.1',
+      port: 5555
+    }
+  })
+
+  miner.on('error', (err) => {
+    console.error(err)
+  })
+
+  miner.on('open', () => {
+    console.info('open')
+  })
+
+  miner.on('authed', (info) => {
+    console.info('authed', info)
+  })
+
+  miner.on('close', () => {
+    console.info('close')
+  })
+
+  miner.on('job', (job) => {
+    console.info('job', job)
+  })
+
+  miner.on('update', (v1, v2, v3) => {
+    console.info('update', v1, v2, v3)
+  })
+
+  miner.on('found', (info) => {
+    console.info('found', info)
+  })
+
+  miner.on('accepted', (hash) => {
+    console.info('accepted', hash)
+  })
+
+  miner.start()
+</script>
+</body>
+</html>
