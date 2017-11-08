@@ -50,11 +50,17 @@
 
 
 <script>
+
+    function getTransactionUrl(id) {
+        return transactionExplorer.replace('{symbol}', lastStats.config.symbol.toLowerCase()).replace('{id}', id);
+    }
+
     currentPage = {
         destroy: function(){
             if (xhrGetPayments) xhrGetPayments.abort();
         },
         update: function(){
+            console.log(lastStats)
             updateText('paymentsTotal', lastStats.pool.totalPayments.toString());
             updateText('paymentsTotalPaid', lastStats.pool.totalMinersPaid.toString());
             updateText('paymentsMinimum', getReadableCoins(lastStats.config.minPaymentThreshold, 3));
